@@ -10,6 +10,7 @@
 </head>
 <body>
 <link href="view/style.css" rel="stylesheet" type="text/css">
+<?php echo $message ?>
 <table>
     <tr>
     <td width="150"><a href="new.php">新規書き込み</a></td>
@@ -31,7 +32,7 @@ foreach($post_list as $post){ ?>
         <td width="400"><?php echo nl2br(htmlspecialchars($post['body'])); ?></td>
         <td><?php echo $post['created_at'] ?></td>
         <td><?php echo $post['updated_at'] ?></td>
-        <td><a href="edit.php?id=<?php echo($post['id']) ?>">編集</a>/<a href="delete.php?id=<?php echo($post['id']) ?>">削除</a></td>
+        <td><a href="edit.php?id=<?php echo($post['id']) ?>">編集</a>/<a href="kakunin.php?id=<?php echo($post['id']) ?>">削除</a></td>
         </tr>
 <?php } ?>
         </table>

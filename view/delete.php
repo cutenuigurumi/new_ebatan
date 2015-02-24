@@ -9,6 +9,7 @@
 <p>下記の書き込みを削除してもよろしいですか？</p>
 <p>
 <input type="hidden" name="id" value="<?php echo ($id) ?>">
+<input type="hidden" name="process_type" value="delete">
 件名：<input type="text" name="title" value="<?php echo($title); ?>">
 </p>
 <p>

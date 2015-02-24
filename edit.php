@@ -2,6 +2,7 @@
 define("NONE_TITLE", "<p>タイトルがありません</p>");
 define("OVER_TITLE", "<p>タイトルは64文字以内で入力してください。</p>");
 define("NONE_BODY", "<p>本文がありません</p>");
+define("EX_PAGE", "http://54.92.3.142/new_ebatan/kakunin.php");
 
 //デバッグ用
 error_reporting(E_ALL);
@@ -13,27 +14,27 @@ require('db_connect.php');
 //変数の宣言
 $error_msg = '';
 $id = $_GET['id'];
+$ex_page = EX_PAGE.'?id='.$id;
 
-	//SQLを格納
-	$sql = "SELECT title,body FROM post WHERE id = $id";
+//SQLを格納
+$sql = "SELECT title,body FROM post WHERE id = $id";
 
-	//クエリの発行
-	$result = mysql_query($sql, $link);
-	if(!$result){
-		die('<p>SELECTクエリの発行に失敗しました。。</p>');
-	}
-	$post = mysql_fetch_array($result);
-	$title = $post['title'];
-	$body = $post['body'];
+//クエリの発行
+$result = mysql_query($sql, $link);
+if(!$result){
+	die('<p>SELECTクエリの発行に失敗しました。。</p>');
+}
+$edit_post = mysql_fetch_array($result);
+//$title = $edit_post['title'];
+//$body = $edit_post['body'];
 
 //初回の判定
 if(empty($_COOKIE["PHPSESSID"])){
-    $_SESSION['error_message']['title']['none'] = '';
-    $_SESSION['error_message']['title']['over'] = '';
-    $_SESSION['error_message']['body']['none'] = '';
-print("初回判定");
+	$_SESSION['error_message']['title']['none'] = '';
+	$_SESSION['error_message']['title']['over'] = '';
+ 	$_SESSION['error_message']['body']['none'] = '';
 }
-//edit_kakunin.phpでエラーがあったかの処理
+//kakunin.phpでエラーがあったかの処理
 if(isset($_SESSION['error_message']['title']['none']) &&  $_SESSION['error_message']['title']['none'] == 1){
     $error_msg .= NONE_TITLE;
 }
@@ -43,23 +44,34 @@ if(isset($_SESSION['error_message']['title']['over'] ) && $_SESSION['error_messa
 if(isset($_SESSION['error_message']['body']['none']) &&  $_SESSION['error_message']['body']['none'] == 1){
     $error_msg .= NONE_BODY;
 }
+
 if(!empty($_SESSION['id'])){
-	$id = $_SESSION['id'];
+    $id = $_SESSION['id'];
+}else{
+	$id = $_GET['id'];
 }
 if(!empty($_SESSION['title'])){
     $title = $_SESSION['title'];
+}else{
+	$title = $edit_post['title'];
 }
 if(!empty($_SESSION['body'])){
     $body = $_SESSION['body'];
+}else{
+	$body  = $edit_post['body'];
 }
+
+
 
 require_once('view/edit.php');
 
-$_SESSION['error_message']['title']['none'] = '';
-$_SESSION['error_message']['title']['over']  = '';
-$_SESSION['error_message']['body']['none'] = '';
-$_SESSION['title'] = '';
-$_SESSION['body'] = '';
+	//ここでクリアしておかないとブラウザから戻るボタンを押した時にセッションが削除されずに次回投稿した時も残り続ける
+	$_SESSION['error_message']['title']['none'] = '';
+	$_SESSION['error_message']['title']['over']  = '';
+	$_SESSION['error_message']['body']['none'] = '';
+	$_SESSION['id'] = '';
+	$_SESSION['title'] = '';
+	$_SESSION['body'] = '';
 
 
 ?>
